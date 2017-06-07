@@ -32,17 +32,13 @@ module.exports = (grunt) ->
                         'src/scripts/ui/dialogs/properties.coffee'
                         'src/scripts/ui/dialogs/table.coffee'
                         'src/scripts/ui/dialogs/video.coffee'
-
+                        'src/scripts/ui/dialogs/headeritem.coffee'
 
                         # Other
                         'src/scripts/editor.coffee'
                         'src/scripts/history.coffee'
                         'src/scripts/styles.coffee'
                         'src/scripts/tools.coffee'
-
-                        # Custom Tools
-                        'src/scripts/ui/dialogs/headeritem.coffee'
-                        'src/scripts/headeritem.coffee'
                     ]
 
             sandbox:
@@ -80,7 +76,6 @@ module.exports = (grunt) ->
                         'src/spec/history.coffee'
                         'src/spec/tools.coffee'
                         'src/spec/styles.coffee'
-
                         ]
 
         sass:

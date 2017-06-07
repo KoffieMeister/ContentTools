@@ -5394,7 +5394,7 @@
   ContentTools = {
     Tools: {},
     CANCEL_MESSAGE: 'Your changes have not been saved, do you really want to lose them?'.trim(),
-    DEFAULT_TOOLS: [['bold', 'italic', 'link', 'align-left', 'align-center', 'align-right'], ['heading', 'subheading', 'paragraph', 'unordered-list', 'ordered-list', 'table', 'indent', 'unindent', 'line-break'], ['image', 'video', 'preformatted', 'headeritem'], ['undo', 'redo', 'remove']],
+    DEFAULT_TOOLS: [['bold', 'italic', 'link', 'align-left', 'align-center', 'align-right'], ['heading', 'subheading', 'paragraph', 'unordered-list', 'ordered-list', 'table', 'indent', 'unindent', 'line-break'], ['image', 'video', 'preformatted', 'headerItem'], ['undo', 'redo', 'remove']],
     DEFAULT_VIDEO_HEIGHT: 300,
     DEFAULT_VIDEO_WIDTH: 400,
     HIGHLIGHT_HOLD_DURATION: 2000,
@@ -8026,6 +8026,32 @@
 
   })(ContentTools.DialogUI);
 
+  HeaderItemDialog = (function(_super) {
+    __extends(HeaderItemDialog, _super);
+
+    function HeaderItemDialog() {
+      return HeaderItemDialog.__super__.constructor.apply(this, arguments);
+    }
+
+    HeaderItemDialog.prototype.mount = function() {
+      HeaderItemDialog.__super__.mount.call(this);
+      this._domInput.setAttribute('name', 'Header Item name');
+      this._domInput.setAttribute('placeholder', 'Enter a name to be displayed in the header');
+      return this._domElement.removeChild(this._domTargetButton);
+    };
+
+    HeaderItemDialog.prototype.save = function() {
+      var detail;
+      detail = {
+        itemname: this._domInput.value.trim()
+      };
+      return this.dispatchEvent(this.createEvent('save', detail));
+    };
+
+    return HeaderItemDialog;
+
+  })(ContentTools.DialogUI);
+
   _EditorApp = (function(_super) {
     __extends(_EditorApp, _super);
 
@@ -10256,32 +10282,6 @@
 
   })(ContentTools.Tool);
 
-  HeaderItemDialog = (function(_super) {
-    __extends(HeaderItemDialog, _super);
-
-    function HeaderItemDialog() {
-      return HeaderItemDialog.__super__.constructor.apply(this, arguments);
-    }
-
-    HeaderItemDialog.prototype.mount = function() {
-      HeaderItemDialog.__super__.mount.call(this);
-      this._domInput.setAttribute('name', 'Header Item name');
-      this._domInput.setAttribute('placeholder', 'Enter a name to be displayed in the header');
-      return this._domElement.removeChild(this._domTargetButton);
-    };
-
-    HeaderItemDialog.prototype.save = function() {
-      var detail;
-      detail = {
-        itemname: this._domInput.value.trim()
-      };
-      return this.dispatchEvent(this.createEvent('save', detail));
-    };
-
-    return HeaderItemDialog;
-
-  })(ContentTools.DialogUI);
-
   ContentTools.Tools.HeaderItem = (function(_super) {
     __extends(HeaderItem, _super);
 
@@ -10289,11 +10289,11 @@
       return HeaderItem.__super__.constructor.apply(this, arguments);
     }
 
-    ContentTools.ToolShelf.stow(HeaderItem, 'headeritem');
+    ContentTools.ToolShelf.stow(HeaderItem, 'headerItem');
 
     HeaderItem.label = 'Header Item';
 
-    HeaderItem.icon = 'headeritem';
+    HeaderItem.icon = 'headerItem';
 
     HeaderItem.canApply = function(element, selection) {
       return element.content;
@@ -10346,6 +10346,6 @@
 
   })(ContentTools.Tool);
 
-  ContentTools.DEFAULT_TOOLS[0].push('headeritem');
+  ContentTools.DEFAULT_TOOLS[0].push('time');
 
 }).call(this);
