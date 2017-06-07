@@ -5385,7 +5385,7 @@
 }).call(this);
 
 (function() {
-  var AttributeUI, ContentTools, CropMarksUI, StyleUI, exports, _EditorApp,
+  var AttributeUI, ContentTools, CropMarksUI, HeaderItemDialog, StyleUI, exports, _EditorApp,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -5394,7 +5394,7 @@
   ContentTools = {
     Tools: {},
     CANCEL_MESSAGE: 'Your changes have not been saved, do you really want to lose them?'.trim(),
-    DEFAULT_TOOLS: [['bold', 'italic', 'link', 'align-left', 'align-center', 'align-right'], ['heading', 'subheading', 'paragraph', 'unordered-list', 'ordered-list', 'table', 'indent', 'unindent', 'line-break'], ['image', 'video', 'preformatted'], ['undo', 'redo', 'remove']],
+    DEFAULT_TOOLS: [['bold', 'italic', 'link', 'align-left', 'align-center', 'align-right'], ['heading', 'subheading', 'paragraph', 'unordered-list', 'ordered-list', 'table', 'indent', 'unindent', 'line-break'], ['image', 'video', 'preformatted', 'headerItem'], ['undo', 'redo', 'remove']],
     DEFAULT_VIDEO_HEIGHT: 300,
     DEFAULT_VIDEO_WIDTH: 400,
     HIGHLIGHT_HOLD_DURATION: 2000,
@@ -8026,6 +8026,32 @@
 
   })(ContentTools.DialogUI);
 
+  HeaderItemDialog = (function(_super) {
+    __extends(HeaderItemDialog, _super);
+
+    function HeaderItemDialog() {
+      return HeaderItemDialog.__super__.constructor.apply(this, arguments);
+    }
+
+    HeaderItemDialog.prototype.mount = function() {
+      HeaderItemDialog.__super__.mount.call(this);
+      this._domInput.setAttribute('name', 'Header Item name');
+      this._domInput.setAttribute('placeholder', 'Enter a name to be displayed in the header');
+      return this._domElement.removeChild(this._domTargetButton);
+    };
+
+    HeaderItemDialog.prototype.save = function() {
+      var detail;
+      detail = {
+        itemname: this._domInput.value.trim()
+      };
+      return this.dispatchEvent(this.createEvent('save', detail));
+    };
+
+    return HeaderItemDialog;
+
+  })(ContentTools.DialogUI);
+
   _EditorApp = (function(_super) {
     __extends(_EditorApp, _super);
 
@@ -10255,5 +10281,71 @@
     return Remove;
 
   })(ContentTools.Tool);
+
+  ContentTools.Tools.HeaderItem = (function(_super) {
+    __extends(HeaderItem, _super);
+
+    function HeaderItem() {
+      return HeaderItem.__super__.constructor.apply(this, arguments);
+    }
+
+    ContentTools.ToolShelf.stow(HeaderItem, 'headerItem');
+
+    HeaderItem.label = 'Header Item';
+
+    HeaderItem.icon = 'headerItem';
+
+    HeaderItem.canApply = function(element, selection) {
+      return element.content;
+    };
+
+    HeaderItem.apply = function(element, selection, callback) {
+      var anchor, br, cursor, dialog, modal, tail, tip, toolDetail;
+      toolDetail = {
+        'tool': this,
+        'element': element,
+        'selection': selection
+      };
+      if (!this.dispatchEditorEvent('tool-apply', toolDetail)) {
+        return;
+      }
+      cursor = selection.get()[0] + 1;
+      modal = new ContentTools.ModalUI();
+      dialog = new ContentTools.HeaderItemDialog();
+      dialog.addEventListener('cancel', (function(_this) {
+        return function() {
+          modal.hide();
+          dialog.hide();
+          if (element.restoreState) {
+            element.restoreState();
+          }
+          return callback(false);
+        };
+      })(this));
+      dialog.addEventListener('save', (function(_this) {
+        return function(ev) {
+          var itemname, keepFocus;
+          itemname = ev.detail().itemname;
+          return keepFocus = true;
+        };
+      })(this));
+      tip = element.content.substring(0, selection.get()[0]);
+      tail = element.content.substring(selection.get()[1]);
+      br = new HTMLString.String('<br>', element.content.preserveWhitespace());
+      anchor = new HTMLString.String('<a class="anchor" id="' + itemname.replace(" ", "").toLowerCase() + '" data-name="' + itemname + '"></a>');
+      element.content = tip.concat(anchor, tail);
+      element.updateInnerHTML();
+      element.taint();
+      selection.set(cursor, cursor);
+      element.selection(selection);
+      callback(true);
+      return this.dispatchEditorEvent('tool-applied', toolDetail);
+    };
+
+    return HeaderItem;
+
+  })(ContentTools.Tool);
+
+  ContentTools.DEFAULT_TOOLS[0].push('time');
 
 }).call(this);
