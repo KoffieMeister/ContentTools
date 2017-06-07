@@ -34,7 +34,7 @@ ContentTools =
             'image',
             'video',
             'preformatted'
-            'headerItem'
+            'headeritem'
         ], [
             'undo',
             'redo',
