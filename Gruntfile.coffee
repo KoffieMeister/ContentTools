@@ -32,7 +32,6 @@ module.exports = (grunt) ->
                         'src/scripts/ui/dialogs/properties.coffee'
                         'src/scripts/ui/dialogs/table.coffee'
                         'src/scripts/ui/dialogs/video.coffee'
-                        'src/scripts/ui/dialogs/headeritem.coffee'
 
                         # Other
                         'src/scripts/editor.coffee'

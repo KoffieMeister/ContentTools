@@ -6,13 +6,13 @@ class ContentTools.VideoDialog extends ContentTools.DialogUI
         super('Insert video')
 
     clearPreview: () ->
-# Clear the current video preview
+        # Clear the current video preview
         if @_domPreview
             @_domPreview.parentNode.removeChild(@_domPreview)
             @_domPreview = undefined
 
     mount: () ->
-# Mount the widget
+        # Mount the widget
         super()
 
         # Update dialog class
@@ -30,9 +30,9 @@ class ContentTools.VideoDialog extends ContentTools.DialogUI
         @_domInput.setAttribute('class', 'ct-video-dialog__input')
         @_domInput.setAttribute('name', 'url')
         @_domInput.setAttribute(
-          'placeholder',
-          ContentEdit._('Paste YouTube or Vimeo URL') + '...'
-        )
+            'placeholder',
+            ContentEdit._('Paste YouTube or Vimeo URL') + '...'
+            )
         @_domInput.setAttribute('type', 'text')
         domControlGroup.appendChild(@_domInput)
 
@@ -42,7 +42,7 @@ class ContentTools.VideoDialog extends ContentTools.DialogUI
             'ct-control--text',
             'ct-control--insert'
             'ct-control--muted'
-        ])
+            ])
         @_domButton.textContent = ContentEdit._('Insert')
         domControlGroup.appendChild(@_domButton)
 
@@ -50,9 +50,9 @@ class ContentTools.VideoDialog extends ContentTools.DialogUI
         @_addDOMEventListeners()
 
     preview: (url) ->
-# Preview the specified URL
+        # Preview the specified URL
 
-# Remove any existing preview
+        # Remove any existing preview
         @clearPreview()
 
         # Insert the preview iframe
@@ -64,31 +64,31 @@ class ContentTools.VideoDialog extends ContentTools.DialogUI
         @_domView.appendChild(@_domPreview)
 
     save: () ->
-# Save the video. This method triggers the save method against the
-# dialog allowing the calling code to listen for the `save` event and
-# manage the outcome.
+        # Save the video. This method triggers the save method against the
+        # dialog allowing the calling code to listen for the `save` event and
+        # manage the outcome.
 
-# Attempt to parse a video embed URL
+        # Attempt to parse a video embed URL
         videoURL = @_domInput.value.trim()
         embedURL = ContentTools.getEmbedVideoURL(videoURL)
         if embedURL
             @dispatchEvent(@createEvent('save', {'url': embedURL}))
         else
-# If we can't generate an embed URL trust that the user's knows what
-# they are doing and save with the supplied URL.
+            # If we can't generate an embed URL trust that the user's knows what
+            # they are doing and save with the supplied URL.
             @dispatchEvent(@createEvent('save', {'url': videoURL}))
 
     show: () ->
-# Show the widget
+        # Show the widget
         super()
 
         # Once visible automatically give focus to the link input
         @_domInput.focus()
 
     unmount: () ->
-# Unmount the component from the DOM
+        # Unmount the component from the DOM
 
-# Unselect any content
+        # Unselect any content
         if @isMounted()
             @_domInput.blur()
 
@@ -98,18 +98,18 @@ class ContentTools.VideoDialog extends ContentTools.DialogUI
         @_domInput = null
         @_domPreview = null
 
-# Private methods
+    # Private methods
 
     _addDOMEventListeners: () ->
-# Add event listeners for the widget
+        # Add event listeners for the widget
         super()
 
         # Provide a preview of the video whenever a valid URL is inserted into
         # the input.
         @_domInput.addEventListener 'input', (ev) =>
 
-# If the input field is empty we disable the insert button
-            if ev.target.value
+            # If the input field is empty we disable the insert button
+           if ev.target.value
                 ContentEdit.removeCSSClass(@_domButton, 'ct-control--muted')
             else
                 ContentEdit.addCSSClass(@_domButton, 'ct-control--muted')
