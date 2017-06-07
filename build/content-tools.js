@@ -5394,7 +5394,7 @@
   ContentTools = {
     Tools: {},
     CANCEL_MESSAGE: 'Your changes have not been saved, do you really want to lose them?'.trim(),
-    DEFAULT_TOOLS: [['bold', 'italic', 'link', 'align-left', 'align-center', 'align-right'], ['heading', 'subheading', 'paragraph', 'unordered-list', 'ordered-list', 'table', 'indent', 'unindent', 'line-break'], ['image', 'video', 'preformatted'], ['undo', 'redo', 'remove']],
+    DEFAULT_TOOLS: [['bold', 'italic', 'link', 'align-left', 'align-center', 'align-right', 'headeritem'], ['heading', 'subheading', 'paragraph', 'unordered-list', 'ordered-list', 'table', 'indent', 'unindent', 'line-break'], ['image', 'video', 'preformatted'], ['undo', 'redo', 'remove']],
     DEFAULT_VIDEO_HEIGHT: 300,
     DEFAULT_VIDEO_WIDTH: 400,
     HIGHLIGHT_HOLD_DURATION: 2000,
@@ -10253,6 +10253,64 @@
     };
 
     return Remove;
+
+  })(ContentTools.Tool);
+
+  ContentTools.Tools.Headeritem = (function(_super) {
+    __extends(Headeritem, _super);
+
+    function Headeritem() {
+      return Headeritem.__super__.constructor.apply(this, arguments);
+    }
+
+    ContentTools.ToolShelf.stow(Headeritem, 'headeritem');
+
+    Headeritem.label = 'Header Item';
+
+    Headeritem.icon = 'headeritem';
+
+    Headeritem.canApply = function(element, selection) {
+      return element.content;
+    };
+
+    Headeritem.isApplied = function(element, selection) {
+      var from, to, _ref;
+      if (element.content === void 0 || !element.content.length()) {
+        return false;
+      }
+      _ref = selection.get(), from = _ref[0], to = _ref[1];
+      if (from === to) {
+        to += 1;
+      }
+      return element.content.slice(from, to).hasTags(this.tagName, true);
+    };
+
+    Headeritem.apply = function(element, selection, callback) {
+      var from, to, toolDetail, _ref;
+      toolDetail = {
+        'tool': this,
+        'element': element,
+        'selection': selection
+      };
+      if (!this.dispatchEditorEvent('tool-apply', toolDetail)) {
+        return;
+      }
+      element.storeState();
+      _ref = selection.get(), from = _ref[0], to = _ref[1];
+      if (this.isApplied(element, selection)) {
+        element.content = element.content.unformat(from, to, new HTMLString.Tag(this.tagName));
+      } else {
+        element.content = element.content.format(from, to, new HTMLString.Tag(this.tagName));
+      }
+      element.content.optimize();
+      element.updateInnerHTML();
+      element.taint();
+      element.restoreState();
+      callback(true);
+      return this.dispatchEditorEvent('tool-applied', toolDetail);
+    };
+
+    return Headeritem;
 
   })(ContentTools.Tool);
 
