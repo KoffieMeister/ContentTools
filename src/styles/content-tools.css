@@ -1950,8 +1950,6 @@ supported child elements.
       content: "\e966"; }
     .ct-widget .ct-tool--remove:before {
       content: "\e9ac"; }
-    .ct-widget .ct-tool--headeritem:before {
-      content: "\e946"; }
 
 /**
  * The highlight class below is used to highlight editable regions within the
