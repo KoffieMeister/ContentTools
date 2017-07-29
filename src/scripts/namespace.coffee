@@ -19,8 +19,7 @@ ContentTools =
             'link',
             'align-left',
             'align-center',
-            'align-right',
-            'headeritem'
+            'align-right'
         ], [
             'heading',
             'subheading',
